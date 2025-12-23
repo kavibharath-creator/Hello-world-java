@@ -1,0 +1,13 @@
+FROM maven:3.9.6-eclipse-temurin-17
+
+WORKDIR /app
+
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+EXPOSE 8080
+
+CMD ["java","-jar","target/jb-hello-world-maven-0.1.0.jar"]
+
