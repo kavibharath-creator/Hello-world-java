@@ -37,7 +37,7 @@ jobs:
       # Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-maven:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-maven:1.0.0 .
 
       # Push Docker image
       - name: Push Docker image
