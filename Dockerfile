@@ -7,7 +7,9 @@ COPY src ./src
 
 RUN mvn clean package -DskipTests
 
+COPY target/*.jar app.jar
+
 EXPOSE 8080
 
-CMD ["java","-jar","target/jb-hello-world-maven-0.1.0.jar"]
+CMD ["java","-jar","app.jar"]	
 
