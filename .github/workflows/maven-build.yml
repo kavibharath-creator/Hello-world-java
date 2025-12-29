@@ -44,6 +44,7 @@ jobs:
 
       # Build Docker image
       - name: Build Docker image
+        if: github.ref == 'refs/heads/master'
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-maven:0.1.0 .
 
@@ -57,7 +58,7 @@ jobs:
       - name: Remove local Docker image
         if: github.ref == 'refs/heads/master'
         run: |
-          docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-maven:0.1.0 || true
+          docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-maven:0.1.0 
           
       # Clean workspace after each run
       - name: Cleanup workspace
