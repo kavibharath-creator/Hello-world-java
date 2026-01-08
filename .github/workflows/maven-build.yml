@@ -67,7 +67,7 @@ jobs:
       - name: Run Ansible Playbook
         if: github.ref == 'refs/heads/master'
         run: |
-          wsl ansible-playbook /mnt/c/actions-runner/_work/Hello-world-java/Hello-world-java  
+          wsl ansible-playbook /mnt/c/actions-runner/_work/ansible/deploy.yml -i /mnt/c/actions-runner/_work/ansible/inventory.ini
 
 
     # name: CD-Deploy using Helm
