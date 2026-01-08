@@ -10,7 +10,7 @@ jobs:
   CI:
     name: CI-Build & Push Docker Image
     runs-on: [self-hosted, windows, docker-desktop]
-    # runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest 
 
     steps:
       # Checkout code
@@ -56,24 +56,38 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-maven:0.1.0
 
   CD:
-    name: CD-Deploy using Helm
-    needs: CI
-    runs-on: [self-hosted, windows, docker-desktop]
-
+    name: Deploy via Ansible (Local WSL)
+    runs-on: [self-hosted, windows]
+    needs: CI  # Ensures deployment runs after CI
     steps:
+      # Checkout code
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Deploy to Kubernetes using Helm
+      - name: Run Ansible Playbook
+        if: github.ref == 'refs/heads/master'
         run: |
-          helm upgrade --install hello-world ./helm/hello-world `
-            --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/hello-world-maven `
-            --set image.tag=0.1.0
+          wsl ansible-playbook /mnt/c/actions-runner/_work/Hello-world-java/Hello-world-java  
 
-      - name: Verify Deployment
-        run: |
-          kubectl get pods
-          kubectl rollout status deployment/hello-world
+
+    # name: CD-Deploy using Helm
+    # needs: CI
+    # runs-on: [self-hosted, windows, docker-desktop]
+
+    # steps:
+    #   - name: Checkout source code
+    #     uses: actions/checkout@v4
+
+    #   - name: Deploy to Kubernetes using Helm
+    #     run: |s
+    #       helm upgrade --install hello-world ./helm/hello-world `
+    #         --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/hello-world-maven `
+    #         --set image.tag=0.1.0
+
+    #   - name: Verify Deployment
+    #     run: |
+    #       kubectl get pods
+    #       kubectl rollout status deployment/hello-world
 
       # # Clean workspace after each run
       # - name: Cleanup workspace
@@ -86,5 +100,3 @@ jobs:
       #   if: github.ref == 'refs/heads/master'
       #   run: |
       #     docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-maven:0.1.0 
-
-          
